@@ -23,8 +23,8 @@ const HomeScreen = ({ navigation, route }) => {
   }, [route.params]);
   
   const handleStartGame = () => {
-    // Pass the selected sword to the game screen
-    navigation.navigate('Game', { selectedSword });
+    // Navigate to level selection
+    navigation.navigate('LevelSelection', { highestLevelReached: route.params?.highestLevelReached || 1 });
   };
   
   return (
@@ -58,12 +58,19 @@ const HomeScreen = ({ navigation, route }) => {
           style={styles.startButton}
           onPress={handleStartGame}
         >
-          <Text style={styles.startButtonText}>Start Game</Text>
+          <Text style={styles.startButtonText}>Play Levels</Text>
+        </TouchableOpacity>
+        
+        <TouchableOpacity 
+          style={styles.quickPlayButton}
+          onPress={() => navigation.navigate('GameScreen', { selectedSword })}
+        >
+          <Text style={styles.quickPlayButtonText}>Quick Play</Text>
         </TouchableOpacity>
         
         <Text style={styles.instructionText}>
-          Tap to throw swords at the rotating moon.{'\n'}
-          Game ends when swords collide.
+          Throw knives at the moon and avoid obstacles.{'\n'}
+          Complete all 30 challenging levels!
         </Text>
       </View>
     </View>
@@ -117,10 +124,27 @@ const styles = StyleSheet.create({
     paddingHorizontal: 40,
     borderRadius: 30,
     elevation: 5,
-    marginBottom: 30,
+    marginBottom: 15,
+    width: width * 0.7,
+    alignItems: 'center',
   },
   startButtonText: {
     fontSize: 24,
+    fontWeight: 'bold',
+    color: 'white',
+  },
+  quickPlayButton: {
+    backgroundColor: '#2196F3',
+    paddingVertical: 12,
+    paddingHorizontal: 40,
+    borderRadius: 30,
+    elevation: 5,
+    marginBottom: 30,
+    width: width * 0.7,
+    alignItems: 'center',
+  },
+  quickPlayButtonText: {
+    fontSize: 20,
     fontWeight: 'bold',
     color: 'white',
   },

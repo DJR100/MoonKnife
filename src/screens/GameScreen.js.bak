@@ -263,7 +263,7 @@ const GameScreen = ({ navigation, route }) => {
             }
             
             // Test multiple points along the sword's path for collisions
-            const steps = 10; // Test 10 points along the path
+            const steps = obstacle.isOrbiting ? 20 : 10; // Double the test points for orbiting obstacles
             for (let i = 0; i <= steps; i++) {
               // Calculate position at this step
               const ratio = i / steps;
@@ -279,23 +279,25 @@ const GameScreen = ({ navigation, route }) => {
               // Increase hitbox for orbiting obstacles to make them more challenging
               let collisionRadius;
               if (obstacle.isOrbiting) {
-                // Much larger hitbox for orbiting obstacles
-                const enlargedSize = obstacle.size * 3.0; // Match the visual size
-                collisionRadius = SWORD_SIZE + (enlargedSize * 15); 
+                // Much larger hitbox for orbiting obstacles to make them completely solid
+                const enlargedSize = obstacle.size * 3.0; // Visual size
+                // Massively increase the collision radius for orbiting obstacles
+                collisionRadius = SWORD_SIZE * 5 + (enlargedSize * 40); 
               } else {
                 // Standard hitbox for regular obstacles
                 const enlargedSize = obstacle.size * 2.5;
                 collisionRadius = SWORD_SIZE * 3 + (enlargedSize * 50);
               }
               
-              // If any point along the path collides, return true
+              // If any point along the path hits, return true
               if (distanceToObstacle < collisionRadius) {
                 return true;
               }
             }
+            
             return false;
           });
-          
+
           if (willHitObstacle) {
             // Collision with obstacle detected - lose a life
             setLives(prevLives => {
